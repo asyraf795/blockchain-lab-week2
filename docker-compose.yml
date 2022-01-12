@@ -1,0 +1,82 @@
+version: '3.8'
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: asyraf795/frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - useraddress-api
+      - userdetails-api
+      - useredu-api
+      - userjob-api
+    networks:
+      - fabricnet
+  useraddress-api:
+    build:
+      context: ./useraddress-api
+      dockerfile: Dockerfile
+    image: asyraf795/useraddress-api
+    container_name: useraddress-api
+    ports:
+      - "8446:8446"
+    depends_on:
+      - mongo
+    networks:
+      - fabricnet
+  userdetails-api:
+    build:
+      context: ./userdetails-api
+      dockerfile: Dockerfile
+    image: asyraf795/userdetails-api
+    container_name: userdetails-api
+    ports:
+      - "8447:8447"
+    depends_on:
+      - mongo
+    networks:
+      - fabricnet
+  useredu-api:
+    build:
+      context: ./useredu-api
+      dockerfile: Dockerfile
+    image: asyraf795/useredu-api
+    container_name: useredu-api
+    ports:
+      - "8445:8445"
+    depends_on:
+      - mongo
+    networks:
+      - fabricnet
+  userjob-api:
+    build:
+      context: ./userjob-api
+      dockerfile: Dockerfile
+    image: asyraf795/userjob-api
+    container_name: userjob-api
+    ports:
+      - "8444:8444"
+    depends_on:
+      - mongo
+    networks:
+      - fabricnet
+  mongo:
+    image: mongo
+    ports: 
+      - "27017:27017"
+    container_name: mongo 
+    volumes:
+        - ./mongodb:/data
+    environment:
+      - MONGO_INDITDB_ROOT_USERNAME
+      - MONGO_INITDB_ROOT_PASSWORD
+      - MONGODB_mongo
+    networks:
+      - fabricnet
+networks:
+  fabricnet:
+    external: false
+    name: fabricnet
